@@ -1,5 +1,6 @@
 import { PostData } from "@/types/post";
-import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 // tar inn props av typen postprops
 export type PostProps = {
@@ -8,12 +9,22 @@ export type PostProps = {
 
 export default function Post({ postData }: PostProps) {
   return (
-    <View style={styles.post}>
-      <Text style={styles.postTitle}>{postData.title}</Text>
-      <View style={styles.postDescriptionContainer}>
-        <Text style={styles.postDescription}>{postData.description}</Text>
+    //ha hele grria i pressable sånn at innleggene blir klikkbare
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: "/post-details/[id]",
+          params: { id: postData.id },
+        })
+      }
+    >
+      <View style={styles.post}>
+        <Text style={styles.postTitle}>{postData.title}</Text>
+        <View style={styles.postDescriptionContainer}>
+          <Text style={styles.postDescription}>{postData.description}</Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
