@@ -24,6 +24,4 @@ export async function getData(key: string) {
 }
 
 //trenger en funksjon som kan hente ut alle innlegg fra local storage og filtrere på id, for å hente ut kun den vi velger
-export async function getFromId(id: string) {
-    
-}
+export async function getFromId(id: string) {}

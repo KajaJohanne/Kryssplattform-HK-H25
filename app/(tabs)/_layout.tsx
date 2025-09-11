@@ -1,10 +1,20 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Tabs } from "expo-router";
 
+<<<<<<< HEAD
 //hver side i en tabs er tabs.screen
 export default function TabBar() {
   return (
     <Tabs>
+=======
+export default function TabBar() {
+  return (
+    <Tabs
+      screenOptions={{
+        title: "hjem",
+      }}
+    >
+>>>>>>> teacher
       <Tabs.Screen
         name="index"
         options={{
