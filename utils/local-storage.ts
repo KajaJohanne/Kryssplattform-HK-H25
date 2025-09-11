@@ -1,3 +1,4 @@
+import { PostData } from "@/types/post";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function storeData(key: string, value: string) {
@@ -24,4 +25,14 @@ export async function getData(key: string) {
 }
 
 //trenger en funksjon som kan hente ut alle innlegg fra local storage og filtrere på id, for å hente ut kun den vi velger
-export async function getFromId(id: string) {}
+export async function getPostByLocalId(id: string) {
+  try {
+    const data = await AsyncStorage.getItem("postStore");
+    if (data !== null) {
+      const posts: PostData[] = JSON.parse(data);
+      return posts.find((post) => post.id === id); //find looper gjennom alle innleggene helt til betingelsen stemmer
+    }
+  } catch (e) {
+    console.log("Feil med getPostByLocalId()", e);
+  }
+}

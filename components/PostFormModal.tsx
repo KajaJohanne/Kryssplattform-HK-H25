@@ -9,12 +9,11 @@ import {
   View,
 } from "react-native";
 
-
 export type PostModalProps = {
   isVisible: boolean; //tar inn en bool for om den er vivible eller ikke
   setIsVisible: (isVisible: boolean) => void;
   // Callback funksjon, vi bruker denne til å "flytte" innlegget vårt ut til foreldrekomponenten
-  addPost: (post: PostData) => void; 
+  addPost: (post: PostData) => void;
 };
 
 export default function PostFormModal({
@@ -50,7 +49,7 @@ export default function PostFormModal({
             style={[styles.button, { borderWidth: 2, borderColor: "gray" }]}
             onPress={() => {
               const newPost: PostData = {
-                id: titleText+descText,
+                id: titleText + descText,
                 title: titleText,
                 description: descText,
               };

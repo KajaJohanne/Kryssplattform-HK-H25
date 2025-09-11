@@ -10,18 +10,7 @@ import { useEffect, useState } from "react";
 export default function HomeScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   //state som er i liste, må forhåndsdefinere type til state
-  const [posts, setPosts] = useState<PostData[]>([
-    {
-      id: "første id",
-      title: "Mitt flrste innlegg",
-      description: "Sensasjonelt!",
-    },
-    {
-      id: "andre id",
-      title: "Mitt andre innlegg",
-      description: "Ubeskrivelig flott",
-    },
-  ]);
+  const [posts, setPosts] = useState<PostData[]>([]);
 
   //det som er i state - vises på siden, macher det som er i localStorage
   async function createPostLocal(newPost: PostData) {
@@ -52,8 +41,6 @@ export default function HomeScreen() {
             <Pressable
               onPress={() => {
                 setIsModalVisible(true);
-                //storeData("Bippiti", "Boppiti");
-                //getData("Bippiti");
               }}
             >
               <Text>Nytt innlegg</Text>
