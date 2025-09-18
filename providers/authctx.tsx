@@ -35,7 +35,7 @@ export function useAuthSession() {
 
 export function AuthSessionProvider({ children }: { children: ReactNode }) {
   const [userSession, setUserSession] = useState<string | null>(null);
-  const [isLoadning, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     //sjekker om noen er logget inn, fra async storage
@@ -57,7 +57,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
           AsyncStorage.removeItem("authSession");
         },
         userNameSession: userSession,
-        isLoading: isLoadning,
+        isLoading: isLoading,
       }}
     >
       {children}

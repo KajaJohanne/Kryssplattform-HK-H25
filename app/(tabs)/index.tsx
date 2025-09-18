@@ -2,6 +2,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import Post from "@/components/Post";
 import PostFormModal from "@/components/PostFormModal";
+import { useAuthSession } from "@/providers/authctx";
 import { PostData } from "@/types/post";
 import { getData, storeData } from "@/utils/local-storage";
 import { Stack } from "expo-router";
@@ -11,6 +12,7 @@ export default function HomeScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   //state som er i liste, må forhåndsdefinere type til state
   const [posts, setPosts] = useState<PostData[]>([]);
+  const { userNameSession } = useAuthSession();
 
   //det som er i state - vises på siden, macher det som er i localStorage
   async function createPostLocal(newPost: PostData) {
@@ -40,6 +42,12 @@ export default function HomeScreen() {
           headerRight: () => (
             <Pressable
               onPress={() => {
+                if (!userNameSession) {
+                  console.log(
+                    "Du må være logget inn for å gjøre denne handlingen"
+                  );
+                  return;
+                }
                 setIsModalVisible(true);
               }}
             >

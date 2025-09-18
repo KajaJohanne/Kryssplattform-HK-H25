@@ -18,7 +18,7 @@ export default function PostDetailsPage() {
     }
   }
 
-  //førsye som skjer når appen åpnes
+  //første som skjer når appen åpnes
   useEffect(() => {
     fetchPostFromLocal(id);
   }, [id]);

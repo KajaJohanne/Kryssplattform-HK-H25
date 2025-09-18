@@ -5,7 +5,6 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ProfilePage() {
   const [userNameText, setUserNameText] = useState("");
-
   const { userNameSession, signIn, signOut } = useAuthSession();
 
   return (
