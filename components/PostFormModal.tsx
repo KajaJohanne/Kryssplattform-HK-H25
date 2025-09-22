@@ -1,6 +1,8 @@
 import { PostData } from "@/types/post";
-import { useState } from "react";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import React, { useState } from "react";
 import {
+  Image,
   Modal,
   Pressable,
   StyleSheet,
@@ -8,10 +10,10 @@ import {
   TextInput,
   View,
 } from "react-native";
-import import EvilIcons from '@expo/vector-icons/EvilIcons';
+import SelectImageModal from "./SelectImageModal";
 
 export type PostModalProps = {
-  isVisible: boolean; //tar inn en bool for om den er vivible eller ikke
+  isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   // Callback funksjon, vi bruker denne til å "flytte" innlegget vårt ut til foreldrekomponenten
   addPost: (post: PostData) => void;
@@ -24,26 +26,38 @@ export default function PostFormModal({
 }: PostModalProps) {
   const [titleText, setTitleText] = useState("");
   const [descText, setDescText] = useState("");
-  const [isCameraOpen, setIsCameraOpen] = useState(false); //starter som false
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
   return (
     <Modal transparent visible={isVisible} animationType="slide">
       <Modal visible={isCameraOpen}>
-        <SelectImageModal />
+        <SelectImageModal
+          closeModal={() => setIsCameraOpen(false)}
+          setImage={(image) => setImage(image)} // Her sendes uri til bildet (filsti til hvor bildet er lagret) og settes i image state
+        />
       </Modal>
       <View style={styles.modalVisible}>
-        <Pressable 
-        onPress={() => setIsCameraOpen(true)}
-        style={{
-          width: "100%",
-          height: 300, 
-          justifyContent: "center",
-          alignItems: "center",
-          borderWidth: 1,
-          borderRadius: 10, 
-          overflow: "hidden"
-        }}>
-          <EvilIcons name="image" size={80} color="black" />
+        <Pressable
+          onPress={() => setIsCameraOpen(true)}
+          style={{
+            width: "100%",
+            height: 300,
+            justifyContent: "center",
+            alignItems: "center",
+            borderWidth: 1,
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+        >
+          {image ? ( //Her sjekker vi om vi har et gyldig bilde, hvis det eksisterer et slikt bilde viser vi det gjennom en <Image> komponent
+            <Image
+              source={{ uri: image }}
+              style={{ resizeMode: "cover", width: "100%", height: 300 }}
+            />
+          ) : (
+            <EvilIcons name="image" size={80} color="black" /> // Hvis ikke viser vi ikonet som vanlig
+          )}
         </Pressable>
         <View style={styles.textInputContainer}>
           <TextInput
