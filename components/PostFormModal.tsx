@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 export type PostModalProps = {
   isVisible: boolean; //tar inn en bool for om den er vivible eller ikke
@@ -23,13 +24,27 @@ export default function PostFormModal({
 }: PostModalProps) {
   const [titleText, setTitleText] = useState("");
   const [descText, setDescText] = useState("");
+  const [isCameraOpen, setIsCameraOpen] = useState(false); //starter som false
 
   return (
     <Modal transparent visible={isVisible} animationType="slide">
+      <Modal visible={isCameraOpen}>
+        <SelectImageModal />
+      </Modal>
       <View style={styles.modalVisible}>
-        <View style={styles.titleContainer}>
-          <Text style={{ fontSize: 24 }}>Lag et nytt innlegg!</Text>
-        </View>
+        <Pressable 
+        onPress={() => setIsCameraOpen(true)}
+        style={{
+          width: "100%",
+          height: 300, 
+          justifyContent: "center",
+          alignItems: "center",
+          borderWidth: 1,
+          borderRadius: 10, 
+          overflow: "hidden"
+        }}>
+          <EvilIcons name="image" size={80} color="black" />
+        </Pressable>
         <View style={styles.textInputContainer}>
           <TextInput
             style={styles.textInput}

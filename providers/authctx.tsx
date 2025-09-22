@@ -2,6 +2,7 @@
 //lage egen hook
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import {
   createContext,
   ReactNode,
@@ -37,6 +38,8 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
   const [userSession, setUserSession] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
     //sjekker om noen er logget inn, fra async storage
     AsyncStorage.getItem("authSession").then((value) => {
@@ -51,6 +54,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
         signIn: (userName: string) => {
           setUserSession(userName);
           AsyncStorage.setItem("authSession", userName);
+          router.replace("/"); // hvis du får logget inn, går du rett til hovedsiden
         },
         signOut: () => {
           setUserSession(null);

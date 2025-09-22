@@ -7,6 +7,7 @@ const Authentication = () => {
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  //state for å se om bruker logger inn/registrerer seg. 
   const [isSignUp, setIsSignUp] = useState(false);
 
   const { signIn } = useAuthSession();
@@ -20,7 +21,7 @@ const Authentication = () => {
       }}
     >
       <View style={styles.mainContainer}>
-        {isSignUp && (
+        {isSignUp && ( //hvis det er signup, conditional rendring
           <View style={styles.textFieldContainer}>
             <Text>Epost</Text>
             <TextInput

@@ -42,7 +42,7 @@ export default function HomeScreen() {
           headerRight: () => (
             <Pressable
               onPress={() => {
-                if (!userNameSession) {
+                if (!userNameSession) { //hvis brukeren ikke er logget inn, returner
                   console.log(
                     "Du må være logget inn for å gjøre denne handlingen"
                   );
