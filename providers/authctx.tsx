@@ -54,7 +54,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
         signIn: (userName: string) => {
           setUserSession(userName);
           AsyncStorage.setItem("authSession", userName);
-          router.replace("/"); // hvis du får logget inn, går du rett til hovedsiden
+          router.replace("/");
         },
         signOut: () => {
           setUserSession(null);

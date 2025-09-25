@@ -7,7 +7,7 @@ const Authentication = () => {
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  //state for å se om bruker logger inn/registrerer seg. 
+  //state for å se om bruker logger inn/registrerer seg.
   const [isSignUp, setIsSignUp] = useState(false);
 
   const { signIn } = useAuthSession();
@@ -67,7 +67,6 @@ const Authentication = () => {
             {isSignUp ? "Registrering" : "Innlogging"}
           </Text>
         </Pressable>
-        {/* )} */}
         <View style={styles.buttonContainer}>
           <Pressable
             style={styles.primaryButton}

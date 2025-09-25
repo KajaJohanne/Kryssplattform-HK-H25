@@ -1,6 +1,7 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
+import React from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-//imppirt for cameraview
 
 type SelectImageModalProps = {
   closeModal: VoidFunction;
@@ -28,13 +29,29 @@ export default function SelectImageModal({
     );
   }
 
-  //hvus det finnes premission og man har det
+  async function pickImage() {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      aspect: [4, 3],
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri); //Hent ut uri til bildet og send det videre ut til PostFormModal
+      closeModal();
+    }
+  }
+
   return (
     <View style={styles.container}>
       <CameraView style={styles.camera} facing="back" />
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() => closeModal()}>
           <Text style={styles.text}>Avbryt</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => pickImage()}>
+          <Text style={styles.text}>Velg...</Text>
         </TouchableOpacity>
       </View>
     </View>
