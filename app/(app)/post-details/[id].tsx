@@ -28,6 +28,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import MapView, { Callout, Marker } from "react-native-maps";
 
 export default function PostDetailsPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -139,6 +140,39 @@ export default function PostDetailsPage() {
             <Text style={styles.smallTextStyle}>Legg til</Text>
           </Pressable>
         </View>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 16,
+          width: "100%",
+          height: 250,
+          marginTop: 16,
+        }}
+      >
+        <MapView
+          zoomEnabled={false}
+          scrollEnabled={false}
+          rotateEnabled={false}
+          pitchEnabled={false}
+          initialRegion={{
+            latitude: post.postCoordinates?.latitude ?? 0,
+            longitude: post.postCoordinates?.longitude ?? 0,
+            latitudeDelta: 0.0082,
+            longitudeDelta: 0.0081,
+          }}
+          style={{ width: "100%", height: "100%" }}
+        >
+          <Marker
+            coordinate={{
+              latitude: post.postCoordinates?.latitude ?? 0,
+              longitude: post.postCoordinates?.longitude ?? 0,
+            }}
+          >
+            <Callout>
+              <Text>Hei jeg er en callout</Text>
+            </Callout>
+          </Marker>
+        </MapView>
       </View>
     </View>
   );
