@@ -1,5 +1,6 @@
 //Dette er navigeringstypen hvor vi skriver mer på egenhpnd sammenlignet med tabs
 
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function PostDetails() {

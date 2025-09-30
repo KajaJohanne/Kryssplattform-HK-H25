@@ -1,7 +1,7 @@
 import { PostData } from "@/types/post";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Image,
   Modal,

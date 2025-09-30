@@ -6,7 +6,7 @@ import { useAuthSession } from "@/providers/authctx";
 import { PostData } from "@/types/post";
 import { getData, storeData } from "@/utils/local-storage";
 import { Stack } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function HomeScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -42,7 +42,8 @@ export default function HomeScreen() {
           headerRight: () => (
             <Pressable
               onPress={() => {
-                if (!userNameSession) { //hvis brukeren ikke er logget inn, returner
+                if (!userNameSession) {
+                  //hvis brukeren ikke er logget inn, returner
                   console.log(
                     "Du må være logget inn for å gjøre denne handlingen"
                   );

@@ -36,7 +36,7 @@ export default function Post({ postData }: PostProps) {
             <Text style={styles.postDescription}>{postData.description}</Text>
             <View style={styles.commentsContainer}>
               <Text style={styles.postDescription}>
-                {postData.comments.length}
+                {postData.comments?.length || 0}
               </Text>
               <EvilIcons name="comment" size={24} color="gray" />
             </View>

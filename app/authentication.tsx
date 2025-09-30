@@ -1,5 +1,5 @@
-import { useAuthSession } from "@/providers/authctx";
-import React, { useState } from "react";
+import { useAuthSession } from "@/providers/authctx"; //hook fra authctx, gir tilgang til login-funksjoner
+import React, { useState } from "react"; 
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 const Authentication = () => {
@@ -8,8 +8,11 @@ const Authentication = () => {
   const [password, setPassword] = useState("");
 
   //state for å se om bruker logger inn/registrerer seg.
+  // false betyr login modus, true betyr registrer-modus
   const [isSignUp, setIsSignUp] = useState(false);
 
+  // auth hook, henter sign in funksjonen fra auth-contexten
+  // når brukeren trykker "Logg inn" blir denne kalt
   const { signIn } = useAuthSession();
 
   return (
@@ -130,3 +133,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+
+/*
+  Når appen starter, sjekker AuthSessionProvider om du er logget inn 
+  Hvis du IKKE er logget inn, haver du på denne skjermen 
+  Her kan du skrive inn brukernavnet 
+  Når du trykker på en knapp, vil SignIn() kalles -> setter brukeren til innlogget i context 
+*/
+ 

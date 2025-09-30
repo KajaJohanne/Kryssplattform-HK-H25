@@ -1,6 +1,6 @@
 import { useAuthSession } from "@/providers/authctx";
 import { Link } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ProfilePage() {

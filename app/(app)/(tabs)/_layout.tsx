@@ -1,5 +1,6 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Tabs } from "expo-router";
+import React from "react";
 
 //hver side i en tabs er tabs.screen
 export default function TabBar() {
