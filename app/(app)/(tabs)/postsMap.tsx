@@ -1,70 +1,86 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-
 import { PostData } from "@/types/post";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getData } from "@/utils/local-storage";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import MapView, { Callout, Marker } from "react-native-maps";
 
 export default function PostsMap() {
   const [posts, setPosts] = useState<PostData[]>([]);
 
-  // For å hente alle poster til postMap taben
-  async function getAllPosts(): Promise<PostData[]> {
-    try {
-      const data = await AsyncStorage.getItem("postStore");
-      if (data !== null) {
-        return JSON.parse(data) as PostData[];
-      }
-      return []; // hvis det ikke finnes posts ennå
-    } catch (e) {
-      console.log("Feil med getallPosts()", e);
-      return [];
+  const getPostsFromLocal = async () => {
+    const posts = await getData("postStore");
+    if (posts) {
+      setPosts(JSON.parse(posts));
     }
-  }
+  };
 
   useEffect(() => {
-    async function loadPosts() {
-      const allPosts = await getAllPosts();
-      setPosts(allPosts);
-    }
-    loadPosts();
+    getPostsFromLocal();
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View>
       <MapView
-        style={styles.map}
         initialRegion={{
-          latitude: 59.91, //Oslo sentrum default
-          longitude: 10.75,
-          latitudeDelta: 0.5,
-          longitudeDelta: 0.5,
+          latitude: 59.917104578,
+          longitude: 10.727706144,
+          latitudeDelta: 0.0422,
+          longitudeDelta: 0.0421,
+        }}
+        showsUserLocation={true} // Viser en blå prikk med din posisjon på kartet
+        style={{
+          width: "100%",
+          height: "100%",
         }}
       >
-        {posts.map((post) =>
-          post.postCoordinates ? (
+        {posts.length > 0 &&
+          posts.map((post) => (
             <Marker
-              key={post.id}
               coordinate={{
-                latitude: post.postCoordinates.latitude,
-                longitude: post.postCoordinates.longitude,
+                latitude: post.postCoordinates?.latitude ?? 0,
+                longitude: post.postCoordinates?.longitude ?? 0,
               }}
-              title={post.title}
-              description={post.description}
-            />
-          ) : null
-        )}
+              key={post.id}
+            >
+              <Callout
+                onPress={() => {
+                  router.navigate({
+                    pathname: "/post-details/[id]",
+                    params: { id: post.id },
+                  });
+                }}
+              >
+                <View style={styles.postPreviewContainer}>
+                  <View style={{ paddingBottom: 16 }}>
+                    <Image
+                      style={styles.postImage}
+                      source={{ uri: post.imageUri }}
+                    />
+                  </View>
+                  <Text style={styles.postTitle}>{post?.title}</Text>
+                  <Text>{post?.description}</Text>
+                </View>
+              </Callout>
+            </Marker>
+          ))}
       </MapView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  postPreviewContainer: {
+    width: 200,
+    height: 200,
   },
-  map: {
-    width: "100%",
-    height: "100%",
+  postImage: {
+    width: 200,
+    height: 150,
+    resizeMode: "cover",
   },
+  postTitle: {
+    fontWeight: "bold",
+  },
+  postDescription: {},
 });

@@ -74,15 +74,7 @@ export default function PostFormModal({
       <View style={styles.modalVisible}>
         <Pressable
           onPress={() => setIsCameraOpen(true)}
-          style={{
-            width: "100%",
-            height: 300,
-            justifyContent: "center",
-            alignItems: "center",
-            borderWidth: 1,
-            borderRadius: 10,
-            overflow: "hidden",
-          }}
+          style={styles.addImageButton}
         >
           {image ? ( //Her sjekker vi om vi har et gyldig bilde, hvis det eksisterer et slikt bilde viser vi det gjennom en <Image> komponent
             <Image
@@ -184,5 +176,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  addImageButton: {
+    width: "100%",
+    height: 300,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });

@@ -61,13 +61,7 @@ export default function PostDetailsPage() {
           <FlatList
             data={post.comments}
             renderItem={(comment) => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  gap: 6,
-                  paddingVertical: 2,
-                }}
-              >
+              <View style={styles.commentItem}>
                 <Text style={[styles.smallTextStyle, { color: "gray" }]}>
                   {comment.item.author}:
                 </Text>
@@ -107,14 +101,7 @@ export default function PostDetailsPage() {
           </Pressable>
         </View>
       </View>
-      <View
-        style={{
-          paddingHorizontal: 16,
-          width: "100%",
-          height: 250,
-          marginTop: 16,
-        }}
-      >
+      <View style={styles.mapContainer}>
         <MapView
           zoomEnabled={false}
           scrollEnabled={false}
@@ -173,6 +160,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 16,
   },
+  commentItem: {
+    flexDirection: "row",
+    gap: 6,
+    paddingVertical: 2,
+  },
   commentTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -191,5 +183,11 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     width: "70%",
     fontSize: 16,
+  },
+  mapContainer: {
+    paddingHorizontal: 16,
+    width: "100%",
+    height: 250,
+    marginTop: 16,
   },
 });
