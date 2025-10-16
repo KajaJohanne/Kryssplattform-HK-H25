@@ -1,5 +1,13 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
+import * as postApi from "@/api/postApi";
 import Post from "@/components/Post";
 import PostFormModal from "@/components/PostFormModal";
 import { useAuthSession } from "@/providers/authctx";
@@ -13,6 +21,7 @@ export default function HomeScreen() {
   //state som er i liste, må forhåndsdefinere type til state
   const [posts, setPosts] = useState<PostData[]>([]);
   const { userNameSession } = useAuthSession();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   //det som er i state - vises på siden, macher det som er i localStorage
   async function createPostLocal(newPost: PostData) {
@@ -30,9 +39,17 @@ export default function HomeScreen() {
     }
   }
 
+  async function getPostsFromApi() {
+    setIsRefreshing(true);
+    const posts = await postApi.getAllPosts();
+    setPosts(posts);
+    setIsRefreshing(false);
+  }
+
   //skal hentes når det åpens
   useEffect(() => {
-    getPostsFromLocal();
+    //getPostsFromLocal();
+    getPostsFromApi();
   }, []);
 
   return (
@@ -61,10 +78,19 @@ export default function HomeScreen() {
         isVisible={isModalVisible}
         setIsVisible={setIsModalVisible}
         // Det nye innlegget dukker opp her, og vi kan legge det til i lista over innlegg
-        addPost={createPostLocal} //får det nye innlegget ut hit, spread ... på liste åpner opp hele lista -> lager ny liste og putter inn alt som var i post før + det siste elementet, da blir lista utvidet inne i en state
+        addPost={async (post) => {
+          await postApi.createPost(post);
+          await getPostsFromApi(); //viser nye innlegg med en gang
+        }}
       />
       <FlatList
         data={posts}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={getPostsFromApi}
+          />
+        }
         ItemSeparatorComponent={() => <View style={{ height: 12 }}></View>}
         renderItem={(post) => <Post postData={post.item} />}
       />

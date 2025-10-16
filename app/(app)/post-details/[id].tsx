@@ -1,3 +1,4 @@
+import * as postApi from "@/api/postApi";
 import { useAuthSession } from "@/providers/authctx";
 import { PostData } from "@/types/post";
 import { getPostByLocalId, updatePostById } from "@/utils/local-storage";
@@ -29,9 +30,15 @@ export default function PostDetailsPage() {
     }
   }
 
+  async function fetchPostFromApi(inputId: string) {
+    const post = await postApi.getPostById(inputId);
+    setPost(post);
+  }
+
   //første som skjer når appen åpnes
   useEffect(() => {
-    fetchPostFromLocal(id);
+    //fetchPostFromLocal(id);
+    fetchPostFromApi(id);
   }, [id]);
 
   if (post === null) {

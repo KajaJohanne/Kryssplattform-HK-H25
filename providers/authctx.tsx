@@ -1,8 +1,10 @@
 //context
 //lage egen hook
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signIn, signOut } from "@/api/authApi";
+import { auth } from "@/firebaseConfig";
 import { useRouter } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
 import React, {
   createContext,
   ReactNode,
@@ -13,7 +15,7 @@ import React, {
 
 //lage ny type
 type AuthContextType = {
-  signIn: (userName: string) => void;
+  signIn: (userEmail: string, password: string) => void;
   signOut: VoidFunction;
   userNameSession?: string | null;
   isLoading: boolean;
@@ -41,24 +43,27 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    //sjekker om noen er logget inn, fra async storage
-    AsyncStorage.getItem("authSession").then((value) => {
-      setUserSession(value);
+    onAuthStateChanged(auth, (user) => {
+      setIsLoading(true);
+      if (user) {
+        setUserSession(user.email);
+      } else {
+        setUserSession(null);
+      }
       setIsLoading(false);
     });
   }, []);
 
+  useEffect(() => {}, []);
+
   return (
     <AuthContext
       value={{
-        signIn: (userName: string) => {
-          setUserSession(userName);
-          AsyncStorage.setItem("authSession", userName);
-          router.replace("/");
+        signIn: (userEmail: string, password: string) => {
+          signIn(userEmail, password);
         },
         signOut: () => {
-          setUserSession(null);
-          AsyncStorage.removeItem("authSession");
+          signOut();
         },
         userNameSession: userSession,
         isLoading: isLoading,
