@@ -1,6 +1,17 @@
-import { useAuthSession } from "@/providers/authctx"; //hook fra authctx, gir tilgang til login-funksjoner
+import * as authApi from "@/api/authApi";
+import { useAuthSession } from "@/providers/authctx";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
 const Authentication = () => {
   const [userName, setUserName] = useState("");
@@ -11,20 +22,31 @@ const Authentication = () => {
   // false betyr login modus, true betyr registrer-modus
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // auth hook, henter sign in funksjonen fra auth-contexten
-  // når brukeren trykker "Logg inn" blir denne kalt
-  const { signIn } = useAuthSession();
+  const { signIn, createUser } = useAuthSession();
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={-50}
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <View style={styles.mainContainer}>
-        {isSignUp && ( //hvis det er signup, conditional rendring
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.mainContainer}>
+          {isSignUp && (
+            <View style={styles.textFieldContainer}>
+              <Text>Brukernavn</Text>
+              <TextInput
+                value={userName}
+                onChangeText={setUserName}
+                style={styles.textField}
+                placeholder="Brukernavn"
+              />
+            </View>
+          )}
           <View style={styles.textFieldContainer}>
             <Text>Epost</Text>
             <TextInput
@@ -32,62 +54,72 @@ const Authentication = () => {
               onChangeText={setUserEmail}
               style={styles.textField}
               placeholder="Epost"
+              keyboardType="email-address"
             />
           </View>
-        )}
-        <View style={styles.textFieldContainer}>
-          <Text>Brukernavn</Text>
-          <TextInput
-            value={userName}
-            onChangeText={setUserName}
-            style={styles.textField}
-            placeholder="Brukernavn"
-          />
-        </View>
-        <View style={styles.textFieldContainer}>
-          <Text>Passord</Text>
-          <TextInput
-            value={password}
-            secureTextEntry={true}
-            onChangeText={setPassword}
-            style={styles.textField}
-            placeholder="Passord"
-          />
-        </View>
-        <Pressable
-          style={{
-            paddingTop: 24,
-          }}
-          onPress={() => {
-            setIsSignUp(!isSignUp);
-          }}
-        >
-          <Text
-            style={{
-              textDecorationLine: "underline",
-            }}
-          >
-            {isSignUp ? "Registrering" : "Innlogging"}
-          </Text>
-        </Pressable>
-        <View style={styles.buttonContainer}>
+          <View style={styles.textFieldContainer}>
+            <Text>Passord</Text>
+            <TextInput
+              value={password}
+              secureTextEntry={true}
+              onChangeText={setPassword}
+              style={styles.textField}
+              placeholder="Passord"
+            />
+          </View>
           <Pressable
-            style={styles.primaryButton}
+            style={{
+              paddingTop: 24,
+            }}
             onPress={() => {
-              signIn(userName);
+              setIsSignUp(!isSignUp);
             }}
           >
             <Text
               style={{
-                color: "white",
+                textDecorationLine: "underline",
               }}
             >
-              {isSignUp ? "Lag bruker" : "Logg inn"}
+              {isSignUp ? "Registrering" : "Innlogging"}
             </Text>
           </Pressable>
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={styles.primaryButton}
+              onPress={() => {
+                if (isSignUp) {
+                  createUser(userEmail, password, userName);
+                } else {
+                  signIn(userEmail, password);
+                }
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                }}
+              >
+                {isSignUp ? "Lag bruker" : "Logg inn"}
+              </Text>
+            </Pressable>
+            <Pressable
+              style={styles.primaryButton}
+              onPress={async () => {
+                await authApi.signInWithGoogle();
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                }}
+              >
+                Logg inn med google
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 

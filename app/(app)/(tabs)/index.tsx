@@ -4,6 +4,7 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 
@@ -22,6 +23,8 @@ export default function HomeScreen() {
   const [posts, setPosts] = useState<PostData[]>([]);
   const { userNameSession } = useAuthSession();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isDescending, setIsDescending] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   //det som er i state - vises på siden, macher det som er i localStorage
   async function createPostLocal(newPost: PostData) {
@@ -46,9 +49,33 @@ export default function HomeScreen() {
     setIsRefreshing(false);
   }
 
-  //skal hentes når det åpens
+  async function getSortedPostsFromApi() {
+    setIsRefreshing(true);
+    const posts = await postApi.getSortedPosts(isDescending);
+    setPosts(posts);
+    setIsRefreshing(false);
+  }
+
+  async function searchForPosts() {
+    setIsRefreshing(true);
+    const posts = await postApi.getSearchedPosts(searchText);
+    setPosts(posts);
+    setIsRefreshing(false);
+  }
+
   useEffect(() => {
-    //getPostsFromLocal();
+    const delayBounce = setTimeout(() => {
+      searchForPosts();
+    }, 800);
+    return () => clearTimeout(delayBounce);
+  }, [searchText]);
+
+  useEffect(() => {
+    getSortedPostsFromApi();
+  }, [isDescending]);
+
+  useEffect(() => {
+    // getPostsFromLocal();
     getPostsFromApi();
   }, []);
 
@@ -72,17 +99,28 @@ export default function HomeScreen() {
               <Text>Nytt innlegg</Text>
             </Pressable>
           ),
+          headerLeft: () => (
+            <Pressable onPress={() => setIsDescending(!isDescending)}>
+              <Text>{isDescending ? "Å-A" : "A-Å"}</Text>
+            </Pressable>
+          ),
         }}
       />
       <PostFormModal
         isVisible={isModalVisible}
         setIsVisible={setIsModalVisible}
-        // Det nye innlegget dukker opp her, og vi kan legge det til i lista over innlegg
-        addPost={async (post) => {
-          await postApi.createPost(post);
-          await getPostsFromApi(); //viser nye innlegg med en gang
+        // Nytt innlegg håndteres nå fra modalen, alt vi trenger her er å laste inn på nytt
+        confirmPostAdded={async () => {
+          await getPostsFromApi();
         }}
       />
+      <View style={{ width: "100%", paddingHorizontal: 20 }}>
+        <TextInput
+          style={{ borderWidth: 1, padding: 10, width: "100%" }}
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+      </View>
       <FlatList
         data={posts}
         refreshControl={
